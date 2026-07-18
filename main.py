@@ -12,13 +12,13 @@ class RLModel:
         self.epsilon = 1.0
         #Epsilon is a measure of how much the AI will explore new actions versus exploiting known actions. A value of 1 means the AI will always explore, while a value of 0 means the AI will always exploit known actions.
 
-        self.epsilon_decay = 0.995
+        self.epsilon_decay = 0.999
         #The epsilon decay is a measure of how quickly the AI will reduce its exploration over time. A value of 1 means the AI will not reduce its exploration, while a value of 0 means the AI will immediately stop exploring.
 
         self.epsilon_min = 0.01
         #The minimum value of epsilon. Once epsilon reaches this value, it will not decay further.
 
-        self.episodes = 2000 
+        self.episodes = 3000 
         #The number of episodes the AI will train for. An episode is a single run of the environment from start to finish.
 
         self.env, self.n_states, self.n_actions = self.setup_env()
