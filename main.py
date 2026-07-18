@@ -49,8 +49,8 @@ class RLModel:
     s13 [  0.0,  0.0,  0.0,  0.0 ]
     s14 [  0.0,  0.0,  0.0,  0.0 ]
     s15 [  0.0,  0.0,  0.0,  0.0 ]
-
-    16 rows, 4 numbers each = 64 values total.
+    ...
+    64 rows, 4 numbers each =  values total.
 
     After training it fills in with real numbers, e.g. (illustrative):
 
@@ -72,7 +72,7 @@ class RLModel:
         self.env = gym.make(
             'FrozenLake-v1',
             desc = None,
-            map_name = "4x4",
+            map_name = "8x8",
             is_slippery = is_slippery,
             )
         return self.env, self.env.observation_space.n, self.env.action_space.n
@@ -87,7 +87,7 @@ class RLModel:
         random_n = np.random.random() #draws a random float between 0 and 1
         if random_n < self.epsilon: #if the random number is less than epsilon, the AI will explore a new action
             return self.env.action_space.sample() #returns a random action
-        return np.argmax(self.q_table[state]) 
+        return self.argmax_random(self.q_table[state]) 
     #If not then trust the q-table 
     #self.q_table[state] grabs the row for the current square: 4 numbers one per action
     #np.argmax() returns the index of the largest number in that row, which is the action with the highest expected future reward.
@@ -119,7 +119,9 @@ class RLModel:
                 print(f"Episode: {episode} && Win rate: {(count/(episode - 1)) *100}%")
                 
             
-
+    def argmax_random(self, row):
+            return np.random.choice(np.flatnonzero(row == row.max()))
+    
 if __name__ == "__main__":
     model = RLModel()
     model.train()
