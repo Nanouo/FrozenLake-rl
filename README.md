@@ -27,7 +27,6 @@ python -m venv .venv
 
 ## Files
 
-- `NOTES.md` — the whole project explained in plain English: how it works, both bugs, and the measurements. Start here if you want the story rather than the code
 - `main.py` — the `RLModel` class: Q-table, epsilon-greedy action selection, Bellman update, training loop
 - `eval_harness.py` — trains N independent agents and evaluates each greedily (epsilon=0). Single runs are misleading; this is the honest test
 - `visualize.py` — renders the learned policy as arrows and animates a greedy rollout

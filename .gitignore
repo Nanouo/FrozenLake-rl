@@ -221,3 +221,6 @@ __marimo__/
 # Trained Q-tables and generated plots/gifs — regenerate by running training
 *.npy
 outputs/
+
+# Personal notes - kept locally, not published
+NOTES.md
