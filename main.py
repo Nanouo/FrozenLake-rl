@@ -8,7 +8,11 @@ class RLModel:
         #Was 0.8 when is_slippery=False: the ice was deterministic, so one visit told the whole truth and overwriting was fine.
         #With is_slippery=True each action has 3 possible outcomes, so a Q-value has to be an AVERAGE over them.
         #A high rate makes the value chase whichever outcome happened last instead of settling. Small nudges repeated many times = averaging.
-        #Measured over 8 trials each on slippery 4x4: alpha 0.8 -> 29.5% mean, alpha 0.05 -> 61.4% mean. Optimal is 72.6%.
+        #Measured on slippery 4x4, 10 trials per setting (mean / min across trials). Optimal is 72.6%:
+        #  alpha 0.8  @ 3k episodes  -> 47.1% / 0.0%   (unstable: best trial 77%, worst 0%)
+        #  alpha 0.05 @ 3k episodes  -> 69.0% / 47.6%
+        #  alpha 0.05 @ 20k episodes -> 71.9% / 69.4%  <- essentially optimal AND consistent
+        #  alpha 0.01 @ 3k episodes  -> 6.1%  / 3.0%   (too small to propagate reward in budget)
 
         self.gamma = 0.95 
         #The discount factor is a measure of how much the AI values future rewards over immediate rewards. A value of 0 means the AI only cares about immediate rewards, while a value of 1 means the AI values future rewards just as much as immediate rewards.
@@ -22,8 +26,12 @@ class RLModel:
         self.epsilon_min = 0.01
         #The minimum value of epsilon. Once epsilon reaches this value, it will not decay further.
 
-        self.episodes = 3000 
+        self.episodes = 20000
         #The number of episodes the AI will train for. An episode is a single run of the environment from start to finish.
+        #20000 rather than 3000 because a small learning_rate needs many more samples to converge - the two knobs move together.
+        #Updates are also not spread evenly: as epsilon decays the agent keeps walking the same corridor, so rarely-visited
+        #state-action pairs stay badly estimated, and one bad cell on the route wrecks the greedy run. More episodes fixes that.
+        #Measured: alpha 0.05 @ 3k -> 69.0% mean / 47.6% worst trial; @ 20k -> 71.9% mean / 69.4% worst. Optimal is 72.6%.
 
         self.env, self.n_states, self.n_actions = self.setup_env()
 
